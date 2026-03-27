@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Farmer Dashboard</title>
+  <link rel="manifest" href="../manifest.json">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/dashboard.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>🌾 AI Farmer</h2>
+      <ul>
+        <li class="active" onclick="showSection('dashboard')">📊 Dashboard</li>
+        <li onclick="showSection('soil')">🌱 Soil Analysis</li>
+        <li onclick="showSection('crops')">🌾 Crop Recs</li>
+        <li onclick="showSection('market')">📈 Market</li>
+        <li onclick="showSection('guide')">📖 Guide</li>
+<li onclick="showSection('profile')">👤 Profile</li>
+        <li class="weather-item" id="liveWeather">
+          <i class="fas fa-map-marker-alt"></i> 
+          <span>Getting location...</span>
+        </li>
+        <li onclick="showFeatures()">🚀 All 13 Features</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <input placeholder="Search farms, crops..." />
+        <select onchange="changeLang(this.value)">
+          <option value="en">EN</option>
+          <option value="hi">हिं</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <section id="dashboard" class="section active">
+        <div class="cards">
+          <div class="card">
+            <div>🌦️ Current Weather</div>
+            <b id="weather">Loading...</b>
+          </div>
+          <div class="card">
+            <div>🌱 Soil Health</div>
+            <b id="soilHealth">Excellent</b>
+          </div>
+          <div class="card">
+            <div>🌾 Top Recommendation</div>
+            <b id="topCrop">Wheat</b>
+          </div>
+          <div class="card">
+            <div>📈 Yield Prediction</div>
+            <b id="yieldPred">+15%</b>
+          </div>
+        </div>
+        <div class="chart">
+          📊 AI Yield Forecast - Expected 20% growth
+        </div>
+      </section>
+
+      <!-- Soil Analysis -->
+      <section id="soil" class="section">
+        <h2>Soil Analysis</h2>
+        <button onclick="analyzeSoil()">Run Analysis</button>
+        <div id="soilResult" style="margin-top: 1rem; padding: 1rem; background: var(--surface); border-radius: var(--radius-lg);"></div>
+      </section>
+
+      <!-- Crops -->
+      <section id="crops" class="section">
+        <h2>Crop Recommendations</h2>
+        <button onclick="recommendCrop()">Get Recommendations</button>
+        <div id="cropResult" style="margin-top: 1rem;"></div>
+      </section>
+
+      <!-- Market -->
+      <section id="market" class="section">
+        <h2>Market Trends</h2>
+        <button onclick="predictMarket()">Predict Prices</button>
+        <div id="marketResult" style="margin-top: 1rem;"></div>
+      </section>
+
+      <!-- Guide -->
+      <section id="guide" class="section">
+        <h2>Crop Guide</h2>
+        <div class="cards">
+          <div class="card">
+            <div>🌱 Preparation</div>
+            <p>Soil tilling, seed quality</p>
+          </div>
+          <div class="card">
+            <div>💧 Irrigation</div>
+            <p>Drip recommended</p>
+          </div>
+        </div>
+      </section>
+
+<!-- Profile -->
+      <section id="profile" class="section">
+        <h2>Profile & Settings</h2>
+        <div class="input-group">
+          <input id="landSize" placeholder=" ">
+          <label>Farm Size (acres)</label>
+        </div>
+        <button onclick="saveProfile()">Save Changes</button>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="section">
+        <h2>🚀 13 AI Features</h2>
+        <div class="features-grid">
+          <div class="feature-card" onclick="demoFeature(1)">
+            <div class="feature-icon">📸</div>
+            <h3>Soil Camera Scan</h3>
+            <p>Real-time image analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(2)">
+            <div class="feature-icon">🎤</div>
+            <h3>Voice Assistant</h3>
+            <p>Speak to analyze soil</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(3)">
+            <div class="feature-icon">📍</div>
+            <h3>GPS Mapping</h3>
+            <p>Field by field analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(4)">
+            <div class="feature-icon">🌦️</div>
+            <h3>Weather Integration</h3>
+            <p>14-day impact analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(5)">
+            <div class="feature-icon">🌾</div>
+            <h3>Crop Ranking</h3>
+            <p>Top 3 personalized crops</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(6)">
+            <div class="feature-icon">📊</div>
+            <h3>Yield Calculator</h3>
+            <p>AI harvest prediction</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(7)">
+            <div class="feature-icon">⚠️</div>
+            <h3>Risk Score</h3>
+            <p>Failure probability</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(8)">
+            <div class="feature-icon">📈</div>
+            <h3>Market Timing</h3>
+            <p>Best sell predictions</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(9)">
+            <div class="feature-icon">💧</div>
+            <h3>Irrigation AI</h3>
+            <p>Water optimization</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(10)">
+            <div class="feature-icon">🌿</div>
+            <h3>Fertilizer Mix</h3>
+            <p>NPK optimization</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(11)">
+            <div class="feature-icon">🛡️</div>
+            <h3>Pest Detection</h3>
+            <p>Early disease warning</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(12)">
+            <div class="feature-icon">📱</div>
+            <h3>Voice Commands</h3>
+            <p>Hands-free operation</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(13)">
+            <div class="feature-icon">📊</div>
+            <h3>Analytics Dashboard</h3>
+            <p>Performance insights</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- AI Chat -->
+  <button class="ai-btn" onclick="toggleAI()">
+    <i class="fas fa-robot"></i>
+  </button>
+  <div class="ai-chat" id="aiChat">
+    <div class="chat-box" id="chatBox">
+      <div>AI: Welcome! Ask about crops, soil, or market.</div>
+    </div>
+    <div style="display: flex; gap: 0.5rem; padding: 1rem;">
+      <input id="chatInput" placeholder="Ask AI..." style="flex: 1;">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script src="../scripts/dashboard.js"></script>
+</body>
+</html>
+
