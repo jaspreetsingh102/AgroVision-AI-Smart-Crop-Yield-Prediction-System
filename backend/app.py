@@ -21,16 +21,42 @@ def signup():
     hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
 
     # Insert into DB
-    res = supabase.table('Client').insert({
+    insert_data = {
         "Username": name,
         "Gmail": email,
-        "password": hashed_pw
-    }).execute()
+        "password": hashed_pw,
+        "Gender": data.get('gender'),
+        "Age": data.get('age'),
+        "Education": data.get('education'),
+        "Contect_No": data.get('phone'),
+        "Experience": data.get('experience'),
+        "Farm_Area": data.get('farm_size'),
+        "Farming_Goal": data.get('goal'),
+        "Current_Crops": data.get('crops'),
+        "Previous_Data": data.get('history')
+    }
+    res = supabase.table('Client').insert(insert_data).execute()
 
     if res.data:
         return jsonify({"status": "success"})
     else:
         return jsonify({"status": "error"}), 400
+
+
+@app.route('/farm-setup', methods=['POST'])
+def farm_setup():
+    data = request.json
+    email = data['email']
+    
+    # Update existing user with farm data
+    update_data = {k: v for k, v in data.items() if k != 'email'}
+    
+    res = supabase.table('Client').update(update_data).eq("Gmail", email).execute()
+    
+    if res.data:
+        return jsonify({"status": "success", "message": "Farm setup saved!"})
+    else:
+        return jsonify({"status": "error", "message": "User not found"}), 404
 
 
 # ✅ LOGIN
@@ -60,4 +86,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

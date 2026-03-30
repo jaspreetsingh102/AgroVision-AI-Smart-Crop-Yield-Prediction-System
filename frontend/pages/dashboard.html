@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Farmer Dashboard</title>
+  <link rel="manifest" href="../../manifest.json">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/dashboard.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>🌾 AI Farmer</h2>
+        <button class="close-sidebar" onclick="toggleSidebar()">×</button>
+      </div>
+      <ul>
+        <div class="sidebar-label">Analytics</div>
+        <li class="active" onclick="showSection('dashboard', this)"><i class="fas fa-th-large"></i> Dashboard</li>
+        
+        <div class="sidebar-label">Smart Tools</div>
+        <li onclick="showSection('yardCalculator', this)"><i class="fas fa-ruler-combined"></i> Yard Calculator</li>
+        <li onclick="showSection('soil', this)"><i class="fas fa-flask"></i> Soil Analysis</li>
+        <li onclick="showSection('crops', this)"><i class="fas fa-seedling"></i> Crop Advisor</li>
+        <li onclick="showSection('guide', this)"><i class="fas fa-book-open"></i> Farmer Guide</li>
+        
+        <div class="sidebar-label">Preferences</div>
+        <li onclick="showSection('profile', this)"><i class="fas fa-user-circle"></i> Profile Settings</li>
+        <li onclick="showFeatures()"><i class="fas fa-rocket"></i> AI Feature Lab</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <input placeholder="Search farms, crops..." />
+        <select onchange="changeLang(this.value)">
+          <option value="en">EN</option>
+          <option value="hi">हिं</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <section id="dashboard" class="section active">
+        <div class="cards">
+          <div class="card">
+            <div>🌦️ Current Weather</div>
+            <b id="weather">Loading...</b>
+          </div>
+          <div class="card">
+            <div>🌧️ Rain Probability</div>
+            <b id="rainProb">--</b>
+          </div>
+          <div class="card">
+            <div>💨 Wind Speed</div>
+            <b id="windSpeed">--</b>
+          </div>
+          <div class="card">
+            <div>💧 Humidity Level</div>
+            <b id="humidity">--</b>
+          </div>
+          <div class="card">
+            <div>⚠️ Smart Alerts</div>
+            <b id="smartAlerts">None</b>
+          </div>
+        </div>
+      </section>
+
+      <!-- Yard Calculator Section (Styled like Feature Lab) -->
+      <section id="yardCalculator" class="section">
+        <h2>📏 Yard Calculator Lab</h2>
+        <div class="features-grid">
+          <div class="feature-card" onclick="yardFeature(1)">
+            <div class="feature-icon">📐</div>
+            <h3>Area Calculation</h3>
+            <p>Length × Width (Sq Ft / m²)</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(2)">
+            <div class="feature-icon">🔄</div>
+            <h3>Unit Conversion</h3>
+            <p>Acres, Hectares & Yards</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(3)">
+            <div class="feature-icon">🔷</div>
+            <h3>Shape Support</h3>
+            <p>Rect, Circle, Triangle</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(4)">
+            <div class="feature-icon">🌱</div>
+            <h3>Seed Estimation</h3>
+            <p>Calculate seeds per area</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(5)">
+            <div class="feature-icon">💧</div>
+            <h3>Water Requirement</h3>
+            <p>Irrigation volume calculator</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(6)">
+            <div class="feature-icon">🧪</div>
+            <h3>Fertilizer Calc</h3>
+            <p>Soil-based NPK needs</p>
+          </div>
+          <div class="feature-card" onclick="yardFeature(7)">
+            <div class="feature-icon">📂</div>
+            <h3>Save History</h3>
+            <p>Track your calculations</p>
+          </div>
+        </div>
+        
+        <div id="yardLabResult" style="margin-top: 2rem; padding: 1.5rem; background: var(--surface); border-radius: var(--radius-lg); display: none;">
+          <h3 id="yardLabTitle" style="color: var(--farm-emerald); margin-bottom: 0.5rem;"></h3>
+          <div id="yardLabContent"></div>
+        </div>
+      </section>
+
+      <!-- Soil Analysis -->
+      <section id="soil" class="section">
+        <h2>Soil Analysis</h2>
+        <button onclick="analyzeSoil()">Run Analysis</button>
+        <div id="soilResult" style="margin-top: 1rem; padding: 1rem; background: var(--surface); border-radius: var(--radius-lg);"></div>
+      </section>
+
+      <!-- Crops -->
+      <section id="crops" class="section">
+        <h2>Crop Recommendations</h2>
+        <button onclick="recommendCrop()">Get Recommendations</button>
+        <div id="cropResult" style="margin-top: 1rem;"></div>
+      </section>
+
+      <!-- Guide -->
+      <section id="guide" class="section">
+        <h2>Crop Guide</h2>
+        <div class="topbar" style="margin-bottom: 1.5rem;">
+          <select id="guideCropSelect" onchange="showCropGuide(this.value)">
+            <option value="">Select a crop for a full guide...</option>
+            <option value="wheat">Wheat 🌾</option>
+            <option value="rice">Rice 🍚</option>
+            <option value="maize">Maize 🌽</option>
+            <option value="tomato">Tomato 🍅</option>
+          </select>
+        </div>
+        <div id="guideActions" class="guide-actions" style="display: none; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+          <button onclick="getAIAdvice()" class="btn-nav" style="flex: 1; min-width: 150px;"><i class="fas fa-brain"></i> AI Advice</button>
+          <button onclick="getMediaGuide()" class="btn-nav" style="flex: 1; min-width: 150px;"><i class="fas fa-video"></i> Video/Image</button>
+          <button onclick="startVoiceGuide()" class="btn-nav" style="flex: 1; min-width: 150px;"><i class="fas fa-volume-up"></i> Voice Guide</button>
+        </div>
+        <div id="featureResult" class="section-active" style="display: none; margin-bottom: 2rem;"></div>
+
+        <div id="guideContent" class="cards">
+          <div class="card">
+            <p>Select a crop above to view detailed preparation and irrigation guides.</p>
+          </div>
+        </div>
+        <div id="timelineSection" style="display: none; margin-top: 2rem;">
+          <h3 style="margin-bottom: 1.5rem; color: var(--farm-emerald);">📅 Step-by-Step Timeline</h3>
+          <div id="guideTimeline" class="timeline"></div>
+        </div>
+      </section>
+
+<!-- Profile -->
+      <section id="profile" class="section">
+        <h2>Profile & Settings</h2>
+        <div class="profile-form">
+          <div class="sidebar-label">Account Details</div>
+          <div class="input-group">
+            <input id="profUsername" placeholder=" ">
+            <label>Full Name</label>
+          </div>
+          <div class="input-group">
+            <input id="profGmail" placeholder=" " readonly style="opacity: 0.6; cursor: not-allowed; background: rgba(0,0,0,0.1);">
+            <label>Gmail (Primary ID)</label>
+          </div>
+
+          
+          <div class="sidebar-label">Security & Password</div>
+          <div id="otpInputGroup">
+            <div class="input-group" id="otpDisplay" style="display: none;">
+              <input type="text" id="otpInput" placeholder=" ">
+              <label>Enter 6-Digit OTP</label>
+            </div>
+            <button id="otpBtn" onclick="requestOTP()" class="btn-nav" style="width: 100%; margin-bottom: 1rem;">Change Password</button>
+            <button id="verifyOtpBtn" onclick="handleVerifyOTP()" class="btn-primary" style="width: 100%; display: none; margin-bottom: 1rem;">Verify OTP</button>
+          </div>
+
+          <div id="passwordChangeFields" style="display: none;">
+            <div class="input-group">
+              <input type="password" id="newPassword" placeholder=" ">
+              <label>New Password</label>
+            </div>
+            <div class="input-group">
+              <input type="password" id="confirmPassword" placeholder=" ">
+              <label>Confirm Password</label>
+            </div>
+            <button id="changePassBtn" onclick="verifyAndChangePassword()" class="btn-hero" style="width: 100%; margin-bottom: 2rem;">Update Password</button>
+          </div>
+
+          <div class="sidebar-label">Personal Profile</div>
+          <div class="input-group">
+            <select id="profGender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <label>Gender</label>
+          </div>
+          <div class="input-group">
+            <input type="number" id="profAge" placeholder=" ">
+            <label>Age</label>
+          </div>
+          <div class="input-group">
+            <input id="profEducation" placeholder=" ">
+            <label>Education</label>
+          </div>
+          <div class="input-group">
+            <input id="profPhone" placeholder=" ">
+            <label>Contact Number</label>
+          </div>
+
+          <div class="sidebar-label">Farm Information</div>
+          <div class="input-group">
+            <input type="number" id="profFarmArea" placeholder=" ">
+            <label>Farm Area (Acres)</label>
+          </div>
+          <div class="input-group">
+            <input id="profExperience" type="number" placeholder=" ">
+            <label>Years of Experience</label>
+          </div>
+          <div class="input-group">
+            <input id="profFarmingGoal" placeholder=" ">
+            <label>Farming Goal</label>
+          </div>
+
+          <div class="sidebar-label">Current / Planned Crops</div>
+          <div class="input-group">
+            <textarea id="profCurrentCrops" placeholder=" " style="width: 100%; height: 80px; background: var(--surface); color: var(--text-primary); border-radius: var(--radius-md); padding: 1.7rem 1.25rem 0.5rem 1.25rem; border: 1px solid var(--surface-hover); resize: none;"></textarea>
+            <label style="top: 0.25rem; font-size: 0.75rem; color: var(--farm-emerald);">Current Crops (comma separated)</label>
+          </div>
+
+          <div class="sidebar-label">Farming History</div>
+          <div id="profHistoryContainer" style="margin-bottom: 1rem;">
+            <!-- Dynamic history rows will appear here -->
+          </div>
+          <button type="button" onclick="addProfHistoryRow()" class="btn-nav" style="width: auto; padding: 0.5rem 1rem; font-size: 0.85rem; margin-bottom: 2rem;">
+            <i class="fas fa-plus"></i> Add Year Record
+          </button>
+
+          <button onclick="saveProfile()" class="btn-primary" style="width: 100%;">Save All Changes</button>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="section">
+        <h2>🚀 13 AI Features</h2>
+        <div class="features-grid">
+          <div class="feature-card" onclick="demoFeature(1)">
+            <div class="feature-icon">📸</div>
+            <h3>Soil Camera Scan</h3>
+            <p>Real-time image analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(2)">
+            <div class="feature-icon">🎤</div>
+            <h3>Voice Assistant</h3>
+            <p>Speak to analyze soil</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(3)">
+            <div class="feature-icon">📍</div>
+            <h3>GPS Mapping</h3>
+            <p>Field by field analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(4)">
+            <div class="feature-icon">🌦️</div>
+            <h3>Weather Integration</h3>
+            <p>14-day impact analysis</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(5)">
+            <div class="feature-icon">🌾</div>
+            <h3>Crop Ranking</h3>
+            <p>Top 3 personalized crops</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(6)">
+            <div class="feature-icon">📊</div>
+            <h3>Yield Calculator</h3>
+            <p>AI harvest prediction</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(7)">
+            <div class="feature-icon">⚠️</div>
+            <h3>Risk Score</h3>
+            <p>Failure probability</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(8)">
+            <div class="feature-icon">📈</div>
+            <h3>Market Timing</h3>
+            <p>Best sell predictions</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(9)">
+            <div class="feature-icon">💧</div>
+            <h3>Irrigation AI</h3>
+            <p>Water optimization</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(10)">
+            <div class="feature-icon">🌿</div>
+            <h3>Fertilizer Mix</h3>
+            <p>NPK optimization</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(11)">
+            <div class="feature-icon">🛡️</div>
+            <h3>Pest Detection</h3>
+            <p>Early disease warning</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(12)">
+            <div class="feature-icon">📱</div>
+            <h3>Voice Commands</h3>
+            <p>Hands-free operation</p>
+          </div>
+          <div class="feature-card" onclick="demoFeature(13)">
+            <div class="feature-icon">📊</div>
+            <h3>Analytics Dashboard</h3>
+            <p>Performance insights</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../scripts/dashboard.js"></script>
+</body>
+</html>

@@ -41,7 +41,7 @@
     --bg-secondary: #f1f5f9;
     --surface: #e2e8f0;
     --surface-hover: #cbd5e1;
-    --text-primary: #0f172a;
+    --text-primary: #000000;
     --text-secondary: #475569;
     --text-muted: #64748b;
   }
@@ -178,9 +178,12 @@ body::before {
 }
 
 .input-group input,
+.input-group textarea,
 .input-group select {
   width: 100%;
-  padding: 1.25rem 1.25rem 0.875rem 1.25rem;
+  padding: 1.7rem 1.25rem 0.5rem 1.25rem;
+  line-height: 1.2;
+  min-height: 3.8rem;
   background: var(--surface);
   border: 1px solid var(--surface-hover);
   border-radius: var(--radius-lg);
@@ -190,7 +193,17 @@ body::before {
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* General inputs not in groups (Search bars, history rows, etc.) */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  padding: 1rem 1.25rem;
+  line-height: 1.2;
+  font-family: inherit;
+}
+
 .input-group input:focus,
+.input-group textarea:focus,
 .input-group select:focus {
   outline: none;
   border-color: var(--farm-emerald);
@@ -200,11 +213,19 @@ body::before {
   background: color-mix(in srgb, var(--surface) 95%, var(--farm-emerald));
 }
 
+.input-group.error input,
+.input-group.error select {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
 .input-group input:focus + label,
+.input-group textarea:focus + label,
 .input-group select:focus + label,
 .input-group input:not(:placeholder-shown) + label,
+.input-group textarea:not(:placeholder-shown) + label,
 .input-group select:not([size]):valid + label {
-  top: 0.5rem;
+  top: 0.25rem;
   font-size: 0.75rem;
   color: var(--farm-emerald);
 }
@@ -386,6 +407,36 @@ button:active::before {
   font-size: 0.875rem;
 }
 
+/* === SIDEBAR TOGGLE STYLES === */
+.menu-toggle {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--surface-hover);
+  color: var(--text-primary);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.close-sidebar {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+
 /* === RESPONSIVE === */
 @media (max-width: 480px) {
   .container {
@@ -398,10 +449,21 @@ button:active::before {
   }
 }
 
+/* Force input visibility fix */
+.input-group input,
+.input-group textarea,
+.input-group select,
+input:not([type="checkbox"]):not([type="radio"]),
+#cropsSearch,
+#chatInput {
+  color: var(--text-primary) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /* === PWA === */
 @media (display-mode: standalone) {
   body::before {
     opacity: 0.5;
   }
 }
-

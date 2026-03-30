@@ -1,5 +1,10 @@
 // AI Farmer Login - Redesigned Tabs Auth (Simple & Clean)
-// Mock auth + guest + localStorage - full workflow preserved
+// Context-aware redirects for dashboard FIXED
+
+const CONFIG = {
+  // Detects if running on localhost or a local IP, otherwise uses relative paths
+  API_BASE_URL: (window.location.port === '5500' || window.location.port === '') ? '' : `http://${window.location.hostname}:5500`
+};
 
 const mockUsers = {
   'demo@farmer.com': 'demo123',
@@ -12,6 +17,14 @@ const authForms = document.querySelectorAll('.auth-form');
 const guestBtn = document.getElementById('guestBtn');
 const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
+
+// FIXED: Context-aware path helper for all redirects
+function getRedirectPath(pageName) {
+  if (window.location.pathname.includes('frountend/pages')) {
+    return pageName; // relative from frountend/pages/
+  }
+  return 'frountend/pages/' + pageName; // from root or other
+}
 
 // === TABS ===
 tabBtns.forEach(btn => {
@@ -38,11 +51,15 @@ async function handleAuth(formId, isSignup = false) {
     
     if (password.length < 6) return showError('Password must be 6+ characters');
     
-    payload.name = name;
+    // Store for completion at the end of the wizard
+    localStorage.setItem('pendingSignup', JSON.stringify({ name, email, password }));
+    return showSuccess('Account details saved!', () => {
+      window.location.href = getRedirectPath('farm-details.html');
+    });
   }
 
   try {
-    const endpoint = isSignup ? '/signup' : '/login';
+    const endpoint = `${CONFIG.API_BASE_URL}/login`;
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -51,19 +68,21 @@ async function handleAuth(formId, isSignup = false) {
     const result = await response.json();
 
     if (response.ok) {
+      // SUCCESS: User logged in
       localStorage.setItem('authUser', email);
       localStorage.setItem('authType', 'user');
-      if (result.user && result.user.name) localStorage.setItem('userName', result.user.name);
       
-      showSuccess(result.message || (isSignup ? 'Account created!' : 'Welcome back!'), () => {
-        window.location.href = 'frountend/pages/farm-details.html';
+      if (result.user && result.user.name) localStorage.setItem('userName', result.user.name);
+
+      showSuccess(result.message || 'Welcome back!', () => {
+        window.location.href = getRedirectPath('dashboard.html');
       });
     } else {
       // Fallback to mock for demo credentials if the database doesn't have them yet
       if (!isSignup && mockUsers[email] === password) {
         localStorage.setItem('authUser', email);
         return showSuccess('Welcome back (Demo Mode)!', () => {
-          window.location.href = 'frountend/pages/farm-details.html';
+          window.location.href = getRedirectPath('dashboard.html');
         });
       }
       showError(result.message || 'Authentication failed');
@@ -78,7 +97,7 @@ guestBtn.onclick = () => {
   localStorage.setItem('authUser', 'guest');
   localStorage.setItem('authType', 'guest');
   showSuccess('Guest mode activated!', () => {
-    window.location.href = 'frountend/pages/farm-details.html';
+    window.location.href = getRedirectPath('farm-details.html');
   });
 };
 
