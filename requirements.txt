@@ -1,0 +1,8 @@
+Flask
+Flask-Cors
+supabase
+bcrypt
+python-dotenv
+numpy
+Pillow
+joblib
