@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — AgroMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10b981">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>🌱 AgroMarket</h2>
+      <ul>
+        <li onclick="location.href='seller-dashboard.html'" style="cursor:pointer">🏠 Dashboard</li>
+        <li onclick="location.href='seller-products.html'" style="cursor:pointer">📦 Products</li>
+        <li onclick="location.href='seller-orders.html'" style="cursor:pointer">🛒 Orders</li>
+        <li onclick="location.href='seller-analytics.html'" style="cursor:pointer">📊 Analytics</li>
+        <li onclick="location.href='seller-profile.html'" class="active" style="cursor:pointer">👤 Profile</li>
+        <li onclick="handleLogout()" style="cursor:pointer; color: #ff4d4d; margin-top: auto;">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <header>
+        <h1>My Profile</h1>
+      </header>
+
+      <!-- Profile Card -->
+      <div class="profile-container">
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-avatar" id="profileAvatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="profile-header-info">
+            <h2 id="profileDisplayName">Loading...</h2>
+            <p class="profile-shop-label" id="profileShopBadge"><i class="fas fa-store"></i> <span
+                id="profileShopName">—</span></p>
+            <p class="profile-member-since"><i class="fas fa-calendar-alt"></i> Member since <span
+                id="profileJoinDate">—</span></p>
+          </div>
+          <button type="button" class="btn-edit-profile" id="editProfileBtn" onclick="toggleEditMode()">
+            <i class="fas fa-pen"></i> Edit Profile
+          </button>
+        </div>
+
+        <!-- Profile Form -->
+        <form id="profileForm" class="profile-form">
+          <div class="profile-section-title">
+            <i class="fas fa-id-card"></i> Personal Information
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label for="fieldShopName"><i class="fas fa-store"></i> Shop Name</label>
+              <input type="text" id="fieldShopName" placeholder="Your shop name" required readonly>
+            </div>
+            <div class="profile-field">
+              <label for="fieldUsername"><i class="fas fa-user-tag"></i> Username</label>
+              <input type="text" id="fieldUsername" placeholder="Your username" required readonly>
+            </div>
+            <div class="profile-field">
+              <label for="fieldEmail"><i class="fas fa-envelope"></i> Email Address</label>
+              <input type="email" id="fieldEmail" placeholder="your@email.com" required readonly>
+            </div>
+            <div class="profile-field">
+              <label for="fieldPhone"><i class="fas fa-phone"></i> Phone Number</label>
+              <input type="tel" id="fieldPhone" placeholder="Phone number" required readonly>
+            </div>
+            <div class="profile-field full-width">
+              <label for="fieldLocation"><i class="fas fa-map-marker-alt"></i> Location</label>
+              <input type="text" id="fieldLocation" placeholder="City, State" required readonly>
+            </div>
+          </div>
+
+          <div class="profile-actions" id="profileActions" style="display: none;">
+            <button type="button" class="btn-discard" id="discardBtn">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="submit" class="btn-save" id="saveBtn">
+              <i class="fas fa-check"></i> Save Changes
+            </button>
+          </div>
+        </form>
+
+        <!-- Change Password Section -->
+        <div id="passwordForm" class="profile-form" style="margin-top: 24px;">
+          <div class="profile-section-title">
+            <i class="fas fa-lock"></i> Change Password
+          </div>
+
+          <!-- Step 1: Request OTP -->
+          <div id="step1-send-otp" class="profile-grid">
+            <div class="profile-field full-width">
+              <label for="fieldOldPassword"><i class="fas fa-unlock-alt"></i> Old Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="fieldOldPassword" placeholder="Enter old password">
+                <button type="button" class="toggle-pw" onclick="togglePassword('fieldOldPassword', this)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="profile-field full-width" style="margin-top: 10px;">
+              <button type="button" id="sendOtpBtn" class="btn-secondary"
+                style="height: 48px; width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #10b981; background: transparent; color: #10b981; font-weight: 600;">
+                Send OTP
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Verify OTP (Hidden initially) -->
+          <div id="step2-verify-otp" class="profile-grid"
+            style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #334155;">
+            <div class="profile-field full-width">
+              <label for="fieldOtp"><i class="fas fa-envelope-open-text"></i> Email OTP</label>
+              <input type="text" id="fieldOtp" placeholder="Enter 6-digit OTP" autocomplete="off">
+            </div>
+            <div class="profile-field full-width" style="margin-top: 10px;">
+              <button type="button" id="verifyOtpBtn" class="btn-save btn-password">
+                <i class="fas fa-check-circle"></i> Verify OTP
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: New Password Modal (Hidden initially) -->
+        <div id="newPasswordModal" class="modal" style="display: none;">
+          <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+              <h2>Set New Password</h2>
+              <span class="close-btn" id="closePasswordModal">&times;</span>
+            </div>
+            <form id="newPasswordForm" style="margin-top: 15px;" novalidate>
+              <div class="profile-grid" style="grid-template-columns: 1fr;">
+                <div class="profile-field full-width">
+                  <label for="fieldNewPassword"><i class="fas fa-key"></i> New Password</label>
+                  <div class="password-input-wrap">
+                    <input type="password" id="fieldNewPassword" placeholder="Enter new password">
+                    <button type="button" class="toggle-pw" onclick="togglePassword('fieldNewPassword', this)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="profile-field full-width" style="margin-top: 10px;">
+                  <label for="fieldConfirmPassword"><i class="fas fa-key"></i> Confirm Password</label>
+                  <div class="password-input-wrap">
+                    <input type="password" id="fieldConfirmPassword" placeholder="Confirm new password">
+                    <button type="button" class="toggle-pw" onclick="togglePassword('fieldConfirmPassword', this)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 25px;">
+                <button type="submit" class="btn-save btn-password" style="width: 100%;">
+                  <i class="fas fa-shield-alt"></i> Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/seller-profile.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>

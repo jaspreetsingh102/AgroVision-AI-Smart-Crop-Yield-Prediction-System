@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Seller Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10b981">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>🌱 AgroMarket</h2>
+      <ul>
+        <li onclick="location.href='seller-dashboard.html'" class="active" style="cursor:pointer">🏠 Dashboard</li>
+        <li onclick="location.href='seller-products.html'" style="cursor:pointer">📦 Products</li>
+        <li onclick="location.href='seller-orders.html'" style="cursor:pointer">🛒 Orders</li>
+        <li onclick="location.href='seller-analytics.html'" style="cursor:pointer">📊 Analytics</li>
+        <li onclick="location.href='seller-profile.html'" style="cursor:pointer">👤 Profile</li>
+        <li onclick="handleLogout()" style="cursor:pointer; color: #ff4d4d; margin-top: auto;">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Header -->
+      <header>
+        <h1>Seller Dashboard</h1>
+        <button class="sell-btn" id="openModalBtn">+ Add Product</button>
+      </header>
+
+      <!-- Stats Cards -->
+      <section class="cards">
+        <div class="card">
+          <h3 id="statTotalProducts">0</h3>
+          <p>Products</p>
+        </div>
+        <div class="card">
+          <h3 id="statTotalOrders">0</h3>
+          <p>Orders</p>
+        </div>
+        <div class="card">
+          <h3 id="statTotalRevenue">₹0</h3>
+          <p>Revenue</p>
+        </div>
+        <div class="card warning">
+          <h3 id="statLowStock">0</h3>
+          <p>Low Stock</p>
+        </div>
+      </section>
+
+      <!-- Product Table -->
+      <section class="table-section">
+        <h2>Recent Products</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="productTable">
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Add Product Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Product</h2>
+        <span class="close-btn">&times;</span>
+      </div>
+      <form id="addProductForm">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Product Name</label>
+            <input type="text" id="pName" required placeholder="e.g. Organic Wheat Seeds">
+          </div>
+          <div class="input-group">
+            <label>Category</label>
+            <select id="pCategory" required>
+              <option value="Seeds">Seeds</option>
+              <option value="Fertilizer">Fertilizer</option>
+              <option value="Pesticides">Pesticides</option>
+              <option value="Tools">Tools</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Price (₹)</label>
+            <input type="number" id="pPrice" required min="1">
+          </div>
+          <div class="input-group">
+            <label>Stock Quantity</label>
+            <input type="number" id="pStock" required min="0">
+          </div>
+          <div class="input-group">
+            <label>Product Image</label>
+            <input type="file" id="pImage" accept="image/*">
+          </div>
+          <div class="input-group">
+            <label>Status</label>
+            <select id="pStatus">
+              <option value="true">Active</option>
+              <option value="false">Draft / Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Description</label>
+          <textarea id="pDesc" rows="3" placeholder="Describe your product..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/dashboard.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>

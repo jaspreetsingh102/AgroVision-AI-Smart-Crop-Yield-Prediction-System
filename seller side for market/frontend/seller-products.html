@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Products — AgroMarket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #020617;
+      color: white;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      font-size: 12px;
+    }
+
+    .btn-delete {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10b981">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+
+<body>
+
+  <div class="dashboard">
+    <aside class="sidebar">
+      <h2>🌱 AgroMarket</h2>
+      <ul>
+        <li onclick="location.href='seller-dashboard.html'" style="cursor:pointer">🏠 Dashboard</li>
+        <li onclick="location.href='seller-products.html'" class="active" style="cursor:pointer">📦 Products</li>
+        <li onclick="location.href='seller-orders.html'" style="cursor:pointer">🛒 Orders</li>
+        <li onclick="location.href='seller-analytics.html'" style="cursor:pointer">📊 Analytics</li>
+        <li onclick="location.href='seller-profile.html'" style="cursor:pointer">👤 Profile</li>
+        <li onclick="handleLogout()" style="cursor:pointer; color: #ff4d4d; margin-top: auto;">🚪 Logout</li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <header>
+        <h1>My Products</h1>
+        <button class="sell-btn" id="openModalBtn">+ Add Product</button>
+      </header>
+
+      <section class="table-section">
+        <div class="search-bar">
+          <input type="text" id="productSearch" placeholder="Search products by name or category...">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="manageProductTable">
+            <tr>
+              <td colspan="6">Loading products...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Reuse Add Product Modal -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Product</h2>
+        <span class="close-btn">&times;</span>
+      </div>
+      <form id="addProductForm">
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Product Name</label>
+            <input type="text" id="pName" required>
+          </div>
+          <div class="input-group">
+            <label>Category</label>
+            <select id="pCategory" required>
+              <option value="Seeds">Seeds</option>
+              <option value="Fertilizer">Fertilizer</option>
+              <option value="Pesticides">Pesticides</option>
+              <option value="Tools">Tools</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Price (₹)</label>
+            <input type="number" id="pPrice" required min="1">
+          </div>
+          <div class="input-group">
+            <label>Stock</label>
+            <input type="number" id="pStock" required min="0">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Description</label>
+          <textarea id="pDesc" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/seller-products.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>

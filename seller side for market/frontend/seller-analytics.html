@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics — AgroMarket</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <!-- Add Chart.js for the graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            margin-bottom: 20px;
+            color: #f8fafc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard">
+        <aside class="sidebar">
+            <h2>🌱 AgroMarket</h2>
+            <ul>
+                <li onclick="location.href='seller-dashboard.html'" style="cursor:pointer">🏠 Dashboard</li>
+                <li onclick="location.href='seller-products.html'" style="cursor:pointer">📦 Products</li>
+                <li onclick="location.href='seller-orders.html'" style="cursor:pointer">🛒 Orders</li>
+                <li onclick="location.href='seller-analytics.html'" class="active" style="cursor:pointer">📊 Analytics
+                </li>
+                <li onclick="location.href='seller-profile.html'" style="cursor:pointer">👤 Profile</li>
+                <li onclick="handleLogout()" style="cursor:pointer; color: #ff4d4d; margin-top: auto;">🚪 Logout</li>
+            </ul>
+        </aside>
+
+        <main class="main">
+            <header>
+                <h1>Sales Analytics</h1>
+            </header>
+
+            <section class="cards">
+                <div class="card">
+                    <h3 id="totalRevenue">₹0</h3>
+                    <p>Total Revenue</p>
+                </div>
+                <div class="card">
+                    <h3 id="totalOrders">0</h3>
+                    <p>Successful Orders</p>
+                </div>
+                <div class="card">
+                    <h3 id="avgOrder">₹0</h3>
+                    <p>Avg. Order Value</p>
+                </div>
+            </section>
+
+            <section class="chart-container">
+                <h2 class="chart-header">Daily Sales Revenue</h2>
+                <canvas id="salesChart" height="100"></canvas>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/seller-analytics.js"></script>
+
+</body>
+
+</html>

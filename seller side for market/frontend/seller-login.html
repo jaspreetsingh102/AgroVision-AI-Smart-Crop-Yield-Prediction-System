@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Login or create your seller account on AgroMarket. Start selling fertilizers, seeds, pesticides & farming tools to thousands of farmers across India.">
+  <title>Seller Login — AgroMarket</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/seller-auth.css">
+
+  <!-- Favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10b981">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+</head>
+
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">🌾</div>
+        <h1>AgroMarket</h1>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="cart.html" class="cart-badge">
+          <i class="fas fa-shopping-cart"></i> Cart
+          <span class="count cart-count" style="display:none">0</span>
+        </a>
+        <a href="seller-login.html" class="nav-cta active">
+          <i class="fas fa-store"></i> Sell Now
+        </a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ====== AUTH SECTION ====== -->
+  <section class="auth-page">
+    <div class="auth-wrapper">
+
+      <!-- Header -->
+      <div class="auth-header">
+        <div class="auth-icon">🏪</div>
+        <h2>Seller Portal</h2>
+        <p>Manage your shop and reach thousands of farmers</p>
+      </div>
+
+      <!-- Auth Card -->
+      <div class="auth-card">
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="tab-btn active" data-tab="loginFormSection" id="loginTab">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button class="tab-btn" data-tab="signupFormSection" id="signupTab">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </div>
+
+        <!-- ====== LOGIN FORM ====== -->
+        <div class="auth-form active" id="loginFormSection">
+          <div class="form-error" id="loginError">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Error message</span>
+          </div>
+
+          <form id="loginForm" autocomplete="on">
+            <div class="input-group">
+              <label for="loginEmail">
+                <i class="fas fa-envelope"></i> Email
+              </label>
+              <input type="email" id="loginEmail" name="email" placeholder="seller@example.com" autocomplete="email"
+                required>
+            </div>
+
+            <div class="input-group">
+              <label for="loginPassword">
+                <i class="fas fa-lock"></i> Password
+              </label>
+              <div class="password-wrapper">
+                <input type="password" id="loginPassword" name="password" placeholder="Enter your password"
+                  autocomplete="current-password" required>
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit btn-login">
+              <span class="btn-text"><i class="fas fa-arrow-right"></i> Login to Dashboard</span>
+              <span class="spinner"></span>
+            </button>
+          </form>
+
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+
+          <div class="guest-link">
+            <a href="products.html">
+              <i class="fas fa-eye"></i> Browse as Guest
+            </a>
+          </div>
+        </div>
+
+        <!-- ====== SIGNUP FORM ====== -->
+        <!-- Matches Supabase table "seller" columns: Shop name, username, email, phone number, password, location -->
+        <div class="auth-form" id="signupFormSection">
+          <div class="form-error" id="signupError">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Error message</span>
+          </div>
+
+          <form id="signupForm" autocomplete="on">
+
+            <!-- Shop Name (maps to "Shop name" column) -->
+            <div class="input-group">
+              <label for="shopName">
+                <i class="fas fa-store"></i> Shop Name
+              </label>
+              <input type="text" id="shopName" name="shopName" placeholder="e.g. Krishna Agro Store" required>
+            </div>
+
+            <!-- Username (maps to "username" column) -->
+            <div class="input-group">
+              <label for="username">
+                <i class="fas fa-user"></i> Username
+              </label>
+              <input type="text" id="username" name="username" placeholder="e.g. rajesh_kumar" required>
+            </div>
+
+            <!-- Email (maps to "email" column) -->
+            <div class="input-group">
+              <label for="signupEmail">
+                <i class="fas fa-envelope"></i> Email Address
+              </label>
+              <input type="email" id="signupEmail" name="email" placeholder="seller@example.com" autocomplete="email"
+                required>
+            </div>
+
+            <div class="form-row">
+              <!-- Phone Number (maps to "phone number" column) -->
+              <div class="input-group">
+                <label for="phone">
+                  <i class="fas fa-phone"></i> Phone Number
+                </label>
+                <input type="tel" id="phone" name="phone" placeholder="9876543210" maxlength="10" required>
+              </div>
+
+              <!-- Location (maps to "location" column) -->
+              <div class="input-group">
+                <label for="location">
+                  <i class="fas fa-map-marker-alt"></i> Location
+                </label>
+                <input type="text" id="location" name="location" placeholder="e.g. Ludhiana, Punjab" required>
+              </div>
+            </div>
+
+            <!-- Password (maps to "password" column) -->
+            <div class="input-group">
+              <label for="signupPassword">
+                <i class="fas fa-lock"></i> Create Password
+              </label>
+              <div class="password-wrapper">
+                <input type="password" id="signupPassword" name="password" placeholder="Min. 6 characters"
+                  autocomplete="new-password" minlength="6" required>
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="password-strength">
+                <div class="strength-bar"></div>
+                <div class="strength-bar"></div>
+                <div class="strength-bar"></div>
+              </div>
+              <div class="strength-text"></div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-group">
+              <label for="confirmPassword">
+                <i class="fas fa-shield-halved"></i> Confirm Password
+              </label>
+              <div class="password-wrapper">
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password"
+                  autocomplete="new-password" minlength="6" required>
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit btn-signup">
+              <span class="btn-text"><i class="fas fa-rocket"></i> Create Seller Account</span>
+              <span class="spinner"></span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Benefits -->
+      <div class="auth-benefits">
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i> Free to join
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i> No commission
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i> Direct contact
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====== SCRIPTS ====== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        })
+        .catch(error => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+  }
+</script>
+</body>
+
+</html>
