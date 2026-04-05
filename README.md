@@ -60,10 +60,14 @@ const GEMINI_API_KEY = "YOUR_ACTUAL_API_KEY_HERE";
 2.  Open the **SQL Editor**.
 3.  Copy the contents of `backend/database_schema.sql` and run it to create the necessary tables (`Client`, `products`, `orders`, `order_items`).
 
-### 5. ML Models
-The application dynamically loads models from the `/ML` folder. 
-1.  Create a folder named `ML` in the project root.
-2.  Place your `.pkl` or `.joblib` files inside. The app specifically looks for filenames containing `pest_model` and `vegetation_model` for specific routes.
+### 5. Machine Learning Models Setup
+The system utilizes a dynamic model loading engine to initialize AI diagnostic capabilities. 
+1.  **Directory Configuration**: Create a directory named `ML` within the `Farmer side/` root folder.
+2.  **Asset Extraction & Deployment**: 
+    - Locate the `pest_detector.zip` compressed archive provided in the project repository. 
+    - **Extraction Process**: Use a standard decompression utility (such as Windows "Extract All", 7-Zip, or the terminal command `unzip pest_detector.zip`) to retrieve the serialized model data.
+    - **Target Directory**: Move the resulting `.pkl` file into the `Farmer side/ML/` directory. The folder structure must be flat (i.e., the file should not be inside another subfolder within `ML`).
+3.  **Model Identification**: The backend service identifies diagnostic models via pattern matching. Ensure the extracted file contains the keyword **`pest_model`** (e.g., `pest_model.pkl`) to allow the Flask server to correctly register and serve the pest detection API.
 
 ---
 
